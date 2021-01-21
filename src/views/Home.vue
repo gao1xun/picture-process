@@ -1,25 +1,25 @@
 <template>
   <div class="home">
-      <div><ImgEditor></ImgEditor></div>
+    <div><ImageEditor :bgImageUrl="bgImageUrl" :hostImageUrl="hostImageUrl" :playerImageUrl="playerImageUrl"></ImageEditor></div>
     <div class="container">
       <div class="left">
-        <div class="maindiv">
+        <!-- <div class="maindiv">
           <el-image class="main-image" :src="mainImageUrl">
             <div slot="error" class="image-slot">
               <i class="el-icon-picture-outline"></i>
             </div>
           </el-image>
-        </div>
+        </div> -->
         <el-row :gutter="20">
           <el-col :span="6"><ImgUpload v-on:imageChange="hostImageUrlChange" :imgsrc="hostImageUrl"></ImgUpload></el-col>
           <el-col :span="6"><ImgUpload v-on:imageChange="playerImageUrlChange" :imgsrc="playerImageUrl"></ImgUpload></el-col>
-          <el-col :span="6"><ImgUpload v-on:imageChange="bgImageUrlChange"></ImgUpload></el-col>
-          <el-col :span="6"><el-button type="primary" @click="merginImgs">mergin</el-button></el-col>
+          <el-col :span="6"><ImgUpload v-on:imageChange="bgImageUrlChange" :imgsrc="bgImageUrl"></ImgUpload></el-col>
+          <!-- <el-col :span="6"><el-button type="primary" @click="merginImgs">mergin</el-button></el-col> -->
         </el-row>
       </div>
       <div class="right">
         
-        <div style="float: bottom;"><el-button type="primary" @click="uploadAllImage">save</el-button></div>
+        <!-- <div><el-button type="primary" @click="uploadAllImage">save</el-button></div> -->
       </div>
     </div>
     
@@ -32,13 +32,13 @@ import ImgUpload from "../components/upload/ImgUpload";
 import axios from 'axios'
 import { getData } from '../util/base64'
 import { mergeImg } from '../util/imgUtil'
-import ImgEditor from '../components/img/ImgEditor'
+import ImageEditor from '../components/img/ImageEditor'
 
 export default {
   name: "Home",
   components: {
     ImgUpload,
-    ImgEditor
+    ImageEditor
   },
   data() {
     return {
@@ -46,7 +46,7 @@ export default {
       hostImageUrl: '',
       playerImageUrl: '',
       bgImageUrl: '',
-      baseImageList: []
+      baseImageList: [],
     }
   },
   methods: {
@@ -76,7 +76,6 @@ export default {
           this.baseImageList.push(this.hostImageUrl)
       }) 
 
-
     },
     playerImageUrlChange (data) {
       console.log("player......")
@@ -89,12 +88,16 @@ export default {
     bgImageUrlChange (data) {
       console.log("bg......")
       console.log(data)
+      this.bgImageUrl = data
+      // this.hostImageUrl
+      // this.playerImageUrl
+      // this.bgImageUrl
     },
     merginImgs() {
       mergeImg(this.baseImageList, (mergeData) => this.mainImageUrl = mergeData)
     },
     uploadAllImage () {
-      console.log("upload all ...")
+      console.log("upload all .....") 
     },
   
   }
