@@ -1,6 +1,11 @@
 <template>
   <div class="home">
-    <div><ImageEditor :bgImageUrl="bgImageUrl" :hostImageUrl="hostImageUrl" :playerImageUrl="playerImageUrl"></ImageEditor></div>
+    <div style="height: 550px">
+      <div></div>
+      <div style="position: absolute;top: 8px;left: 0px;width: 100%" :style="{'z-index': `${bgImageZindex}`}"><ImageEditor :bgImageUrl="bgImageUrl"></ImageEditor></div>
+      <div style="position: absolute;top: 8px;left: 0px;width: 100%" :style="{'z-index': `${hostImageZindex}`}"><ImageEditor :bgImageUrl="hostImageUrl"></ImageEditor></div>
+      <div style="position: absolute;top: 8px;left: 0px;width: 100%" :style="{'z-index': `${playerImageZindex}`}"><ImageEditor :bgImageUrl="playerImageUrl"></ImageEditor></div>
+    </div>
     <div class="container">
       <div class="left">
         <!-- <div class="maindiv">
@@ -14,6 +19,15 @@
           <el-col :span="6"><ImgUpload v-on:imageChange="hostImageUrlChange" :imgsrc="hostImageUrl"></ImgUpload></el-col>
           <el-col :span="6"><ImgUpload v-on:imageChange="playerImageUrlChange" :imgsrc="playerImageUrl"></ImgUpload></el-col>
           <el-col :span="6"><ImgUpload v-on:imageChange="bgImageUrlChange" :imgsrc="bgImageUrl"></ImgUpload></el-col>
+          <!-- <el-col :span="6"><el-button type="primary" @click="merginImgs">mergin</el-button></el-col> -->
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="6"><el-button type="primary"
+              @click="selectHost">host select</el-button></el-col>
+          <el-col :span="6"><el-col :span="6"><el-button type="primary"
+              @click="selectPlayer">player select</el-button></el-col></el-col>
+          <el-col :span="6"><el-col :span="6"><el-button type="primary"
+              @click="selectBg">bg select</el-button></el-col></el-col>
           <!-- <el-col :span="6"><el-button type="primary" @click="merginImgs">mergin</el-button></el-col> -->
         </el-row>
       </div>
@@ -34,6 +48,8 @@ import { getData } from '../util/base64'
 import { mergeImg } from '../util/imgUtil'
 import ImageEditor from '../components/img/ImageEditor'
 
+import $ from 'jquery' 
+
 export default {
   name: "Home",
   components: {
@@ -47,9 +63,40 @@ export default {
       playerImageUrl: '',
       bgImageUrl: '',
       baseImageList: [],
+
+      initZindex: 3000,
+      bgImageZindex: 3000,
+      hostImageZindex: 2999,
+      playerImageZindex: 2998
+      
     }
   },
+  mounted() {
+    // console.log('mounted.........')
+    // console.log($('.bg-transparent div'))
+
+    $('.tui-image-editor-container').css('background-color', 'transparent')
+    $('.tui-image-editor-main-container').css('background-color', 'transparent')
+    $('.tui-image-editor-canvas-container').css('background-color', 'transparent')
+    
+
+  },
   methods: {
+    selectHost() {
+      this.hostImageZindex = this.initZindex
+      this.playerImageZindex = this.initZindex - 1
+      this.bgImageZindex = this.initZindex - 2
+    },
+    selectPlayer() {
+      this.playerImageZindex = this.initZindex
+      this.hostImageZindex = this.initZindex - 1
+      this.bgImageZindex = this.initZindex - 2
+    },
+    selectBg() {
+      this.bgImageZindex = this.initZindex
+      this.hostImageZindex = this.initZindex - 1
+      this.playerImageZindex = this.initZindex - 2
+    },
     axiosPost (data, successFunc) {
       let baseHeader = data.substr(0, data.indexOf("base64,") + 7) 
       console.log("...........baseType:" + baseHeader)

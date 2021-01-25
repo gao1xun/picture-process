@@ -3,9 +3,16 @@
     <!-- <input type="file" accept="image/*" v-on:change="selectImage($event)">
     <el-button type="primary"
         @click="loadImage">load img</el-button>
-        <el-button type="primary"
-        @click="addImage">add img</el-button> -->
-    <tui-image-editor ref="tuiImageEditor" :include-ui="useDefaultUI" :options="options"></tui-image-editor>
+    <el-button type="primary"
+        @click="addImage">add img</el-button>
+    <el-button type="primary"
+        @click="setProperties">setPro img</el-button> -->
+    <tui-image-editor ref="tuiImageEditor" 
+        :include-ui="useDefaultUI" 
+        :options="options"
+        @objectActivated="objectActivated"
+        ></tui-image-editor>
+
     </div>
 </template>
 
@@ -35,7 +42,8 @@ export default {
       //document.documentElement.clientWidth, document.documentElement.clientHeight
       options: editorOptions(700, 500),
 
-      imageUrl: ''
+      imageUrl: '',
+      imageId: ''
     };
   },
   watch: {
@@ -51,17 +59,20 @@ export default {
             console.log("loading bg....over....")
             console.log(objectProps)
 
-            if (this.hostImageUrl) {
-                let hostImg = URL.createObjectURL(getBlob(this.hostImageUrl))
-                this.addImageFunc(hostImg)
-            }
-            setTimeout(() => {
+            this.$refs.tuiImageEditor.invoke('clearUndoStack')
+            this.$refs.tuiImageEditor.invoke('ui.activeMenuEvent');
 
-                if (this.playerImageUrl) {
-                    let playerImg = URL.createObjectURL(getBlob(this.playerImageUrl))
-                    this.addImageFunc(playerImg)
-                }
-            }, 1000)
+            // if (this.hostImageUrl) {
+            //     let hostImg = URL.createObjectURL(getBlob(this.hostImageUrl))
+            //     this.addImageFunc(hostImg)
+            // }
+            // setTimeout(() => {
+
+            //     if (this.playerImageUrl) {
+            //         let playerImg = URL.createObjectURL(getBlob(this.playerImageUrl))
+            //         this.addImageFunc(playerImg)
+            //     }
+            // }, 1000)
 
         }).finally(() => {
             
@@ -70,23 +81,55 @@ export default {
 
       }
   },
+  mounted() {
+  },
     methods: {
-        
+        setProperties () {
+            this.$refs.tuiImageEditor.invoke('setObjectProperties', this.imageId, {
+                    left:100,
+                    top:100,
+                    // width: 200,
+                    // height: 200,
+                    brightness: 0.1,
+                    opacity: 0.5,
+                    grayscale: 0.9
+                })
+            
+        },
+        objectActivated(props) {
+            console.log('............props:')
+            console.log(props)
+            this.imageId = props.id
+        },
         selectImage(event) {
             console.log(event.target.files[0])
-            this.imageUrl = URL.createObjectURL(event.target.files[0])
+            // this.imageUrl = URL.createObjectURL(event.target.files[0])
+            // this.imageUrl = event.target.files[0]
+            this.$refs.tuiImageEditor.invoke('loadImageFromFile', event.target.files[0])
         },
         loadImage () {
-        this.$refs.tuiImageEditor.invoke('loadImageFromURL', this.imageUrl, 'My sample image')
-            .then(() => {
-            console.log("loading....over....")
-            })
+            this.$refs.tuiImageEditor.invoke('loadImageFromFile', this.imageUrl, 'My sample image')
+                .then(() => {
+                console.log("loading....over....")
+                this.$refs.tuiImageEditor.invoke('clearUndoStack')
+                
+                })
         },
         addImageFunc (imgFile) {
             this.$refs.tuiImageEditor.invoke('addImageObject', imgFile)
                 .then((objectProps) => {
                 console.log("addImageObject....over....")
                 console.log(objectProps)
+
+                // setTimeout(() => {
+                //     this.$refs.tuiImageEditor.invoke('applyFilter', 'Grayscale', {grayscaleObjId: objectProps.id})
+                //     .then(obj => {
+                //         console.log('filterType: ', obj.type);
+                //         console.log('actType: ', obj.action);
+                //     }).catch(message => {
+                //         console.log('error: ', message);
+                //     })
+                // }, 1000)
 
 
                 // this.$refs.tuiImageEditor.invoke('changeShape', objectProps.id, {
