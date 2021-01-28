@@ -9,6 +9,21 @@
 </template>
 
 <style>
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #ffffff;
+  /*-ms-overflow-style: none;*/
+  /*overflow: auto;*/
+}
 #app {
   height: 100vh;
   font-family: Avenir, Helvetica, Arial, sans-serif;
