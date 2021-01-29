@@ -23,7 +23,9 @@ const selectionBorder = {
   transparentCorners: false,
   hasControls: true, 
   lockMovementX: false, 
-  lockMovementY: false
+  lockMovementY: false,
+  centeredScaling: true,
+  centeredRotation: true,
 }
 
 export default {
@@ -82,7 +84,7 @@ export default {
         console.log('...................canvas:')
         console.log(img.width)
         console.log(img.height)
-        this.bgImageObj = img.set({ originX: 'left', originY: 'top' }).scale(1);
+        this.bgImageObj = img.set({ originX: 'left', originY: 'top' }).scale(0.5);
         // this.canvas.add(this.bgImageObj);
         this.canvas.setBackgroundImage(this.bgImageObj, () => this.canvas.renderAll());
         //Moves an object to the bottom of the stack of drawn objects
@@ -218,7 +220,11 @@ export default {
     loadHostImage (imgUrl) {
       fabric.Image.fromURL(imgUrl, (img) => {
         this.hostImageObj = img.set({ ...selectionBorder, left: 0, top: 0 }).scale(0.5)
-          .setControlVisible("mtr", false);
+          // .setControlVisible("ml", false)
+          // .setControlVisible("mb", false)
+          // .setControlVisible("mr", false)
+          // .setControlVisible("mt", false)
+          .setControlVisible("mtr", false)
         this.canvas.add(this.hostImageObj);
       });
     },
@@ -228,6 +234,10 @@ export default {
         this.playerImageObj = img
           .set({ ...selectionBorder, left: parseInt(this.width / 2), top: 0 })
           .scale(0.5)
+          // .setControlVisible("ml", false)
+          // .setControlVisible("mb", false)
+          // .setControlVisible("mr", false)
+          // .setControlVisible("mt", false)
           .setControlVisible("mtr", false);
         this.canvas.add(this.playerImageObj);
 
@@ -248,6 +258,7 @@ export default {
     downloadImage(imageName) {
       let dataURL = this.canvas.toDataURL({
         format: "png",
+        multiplier: 2
       });
       console.log(dataURL);
       let blob = getBlob(dataURL);

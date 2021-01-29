@@ -200,8 +200,8 @@ export default {
   },
   data() {
     return {
-      canvasHeight: parseInt(document.documentElement.clientHeight * 0.6) ,
-      canvasWidth: isMobile() ? (document.documentElement.clientWidth - 40) : parseInt(document.documentElement.clientWidth * 0.6),//
+      canvasHeight: 360,//parseInt(document.documentElement.clientHeight * 0.6) ,
+      canvasWidth: isMobile() ? (document.documentElement.clientWidth - 40) : 640,//parseInt(document.documentElement.clientWidth * 0.6),//
       hostImageUrl: "",
       playerImageUrl: "",
       bgImageUrl: "",
